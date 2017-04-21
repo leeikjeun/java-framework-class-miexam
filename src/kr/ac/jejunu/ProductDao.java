@@ -14,8 +14,8 @@ public class ProductDao {
         ResultSet resultSet = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("select * from product where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementMaker statementMaker = new GetStatementMaker(id);
+            preparedStatement = statementMaker.prepareStatement(connection);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 product = new Product();
@@ -58,10 +58,8 @@ public class ProductDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("INSERT into product(id,title,price) VALUES (?,?,?)");
-            preparedStatement.setLong(1, product.getId());
-            preparedStatement.setString(2,product.getTitle());
-            preparedStatement.setInt(3,product.getPrice());
+            StatementMaker statementMaker = new AddStatementMaker(product);
+            preparedStatement = statementMaker.prepareStatement(connection);
             preparedStatement.executeUpdate();
 
 
@@ -95,12 +93,9 @@ public class ProductDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("update product set title = ?, price = ? where id = ?");
-            preparedStatement.setString(1, product.getTitle());
-            preparedStatement.setInt(2,product.getPrice());
-            preparedStatement.setLong(3,product.getId());
+            StatementMaker statementMaker = new UpdateStatementMaker(product);
+            preparedStatement = statementMaker.prepareStatement(connection);
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             throw e;
         } finally {
@@ -126,10 +121,9 @@ public class ProductDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = dataSource.getConnection();
-            preparedStatement = connection.prepareStatement("DELETE FROM product where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementMaker statementMaker = new DeleteStatementMaker(id);
+            preparedStatement = statementMaker.prepareStatement(connection);
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             throw e;
         } finally {

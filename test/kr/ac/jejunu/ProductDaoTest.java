@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -85,8 +86,8 @@ public class ProductDaoTest {
 
     @Test
     public void delete() throws SQLException, ClassNotFoundException {
-        Long id = Long.valueOf(new Random().nextInt(15000));
-        String title = "testupdate";
+        Long id = Long.valueOf(new Random().nextInt(20000));
+        String title = "testdelete";
         Integer price = 5000;
 
         Product product = new Product();
@@ -97,7 +98,14 @@ public class ProductDaoTest {
         productDao.add(product);
         productDao.delete(id);
 
-        Product check = productDao.get(id);
+        Product check = null;
+        try {
+            check = productDao.get(id);
+        } catch (EmptyResultDataAccessException e) {
+            check = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         assertThat(check, nullValue());
 

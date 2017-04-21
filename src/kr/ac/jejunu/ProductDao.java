@@ -1,39 +1,53 @@
 package kr.ac.jejunu;
 
-import javax.sql.DataSource;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.sql.*;
 
 public class ProductDao {
 
-    private Context context;
+    private JdbcTemplate jdbcTemplate;
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public Product get(Long id) throws ClassNotFoundException, SQLException {
         String sql = "select * from product where id = ?";
         Object[] params = new Object[]{id};
-        return context.getProduct(sql, params);
+        Product product = null;
+        try {
+            product = jdbcTemplate.queryForObject(sql, params,(resultSet,i)->{
+                Product product1 = new Product();
+                product1.setId(resultSet.getLong("id"));
+                product1.setTitle(resultSet.getString("title"));
+                product1.setPrice(resultSet.getInt("price"));
+                return product1;
+            });
+        } catch (DataAccessException e) {
+            throw e;
+        }
+        return product;
     }
 
     public void add(Product product) throws ClassNotFoundException, SQLException {
         String sql = "INSERT into product(id,title,price) VALUES (?,?,?)";
         Object[] params = new Object[]{product.getId(),product.getTitle(),product.getPrice()};
-        context.update(sql, params);
+        jdbcTemplate.update(sql, params);
     }
 
     public void update(Product product) throws SQLException {
         String sql = "update product set title = ?, price = ? where id = ?";
         Object[] params = new Object[]{product.getTitle(),product.getPrice(),product.getId()};
-        context.update(sql, params);
+        jdbcTemplate.update(sql, params);
     }
 
 
     public void delete(Long id) throws SQLException {
         String sql = "DELETE FROM product where id = ?";
         Object[] params = new Object[]{id};
-        context.update(sql, params);
+        jdbcTemplate.update(sql, params);
     }
 
 

@@ -11,6 +11,7 @@ import java.util.Random;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsNull.nullValue;
 
 public class ProductDaoTest {
 
@@ -36,7 +37,7 @@ public class ProductDaoTest {
 
     @Test
     public void add() throws SQLException, ClassNotFoundException {
-        Long id = Long.valueOf(new Random().nextInt(1000));
+        Long id = Long.valueOf(new Random().nextInt(5000));
         String title = "testAdd";
         Integer price = 5000;
 
@@ -53,5 +54,56 @@ public class ProductDaoTest {
         assertThat(title, is(checkProduct.getTitle()));
         assertThat(price,is(checkProduct.getPrice()));
     }
+
+    @Test
+    public void update() throws SQLException, ClassNotFoundException {
+        Long id = Long.valueOf(new Random().nextInt(5000));
+        String title = "testupdate";
+        Integer price = 5000;
+
+        Product product = new Product();
+        product.setId(id);
+        product.setTitle(title);
+        product.setPrice(price);
+
+        productDao.add(product);
+
+        String retitle = "retitle";
+        Integer reprice = 8000;
+
+        product.setTitle(retitle);
+        product.setPrice(reprice);
+
+        productDao.update(product);
+
+        Product check = productDao.get(id);
+
+        assertThat(retitle, is(check.getTitle()));
+        assertThat(reprice,is(check.getPrice()));
+
+    }
+
+    @Test
+    public void delete() throws SQLException, ClassNotFoundException {
+        Long id = Long.valueOf(new Random().nextInt(5000));
+        String title = "testupdate";
+        Integer price = 5000;
+
+        Product product = new Product();
+        product.setId(id);
+        product.setTitle(title);
+        product.setPrice(price);
+
+        productDao.add(product);
+        productDao.delete(id);
+
+        Product check = productDao.get(id);
+
+        assertThat(check, nullValue());
+
+    }
+
+
+
 
 }

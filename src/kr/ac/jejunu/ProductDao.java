@@ -25,27 +25,27 @@ public class ProductDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             if (resultSet != null) {
                 try {
                     resultSet.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw e;
                 }
             }
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw e;
                 }
             }
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw e;
                 }
             }
         }
@@ -66,20 +66,20 @@ public class ProductDao {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw e;
                 }
             }
             if (connection != null) {
                 try {
                     connection.close();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    throw e;
                 }
             }
         }
@@ -88,5 +88,65 @@ public class ProductDao {
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
+    }
+
+    public void update(Product product) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement("update product set title = ?, price = ? where id = ?");
+            preparedStatement.setString(1, product.getTitle());
+            preparedStatement.setInt(2,product.getPrice());
+            preparedStatement.setLong(3,product.getId());
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    public void delete(Long id) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement("DELETE FROM product where id = ?");
+            preparedStatement.setLong(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw e;
+                }
+            }
+        }
     }
 }

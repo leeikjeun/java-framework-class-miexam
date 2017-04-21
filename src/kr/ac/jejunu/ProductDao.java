@@ -6,10 +6,6 @@ public class ProductDao {
 
     private ConnetionMaker connetionMaker;
 
-    public ProductDao(ConnetionMaker connetionMaker){
-        this.connetionMaker = connetionMaker;
-    }
-
     public Product get(Long id) throws ClassNotFoundException, SQLException {
         Connection connection = connetionMaker.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("select * from product where id = ?");
@@ -40,4 +36,7 @@ public class ProductDao {
     }
 
 
+    public void setConnetionMaker(ConnetionMaker connetionMaker) {
+        this.connetionMaker = connetionMaker;
+    }
 }

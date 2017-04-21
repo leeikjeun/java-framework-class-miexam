@@ -6,8 +6,11 @@ public class ProductDao {
 
     private ConnetionMaker connetionMaker;
 
+    public ProductDao(ConnetionMaker connetionMaker){
+        this.connetionMaker = connetionMaker;
+    }
+
     public Product get(Long id) throws ClassNotFoundException, SQLException {
-        connetionMaker = new JejuConnetionMaker();
         Connection connection = connetionMaker.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("select * from product where id = ?");
         preparedStatement.setLong(1, id);
@@ -25,7 +28,6 @@ public class ProductDao {
 
 
     public void add(Product product) throws ClassNotFoundException, SQLException {
-        connetionMaker = new JejuConnetionMaker();
         Connection connection = connetionMaker.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT into product(id,title,price) VALUES (?,?,?)");
         preparedStatement.setLong(1, product.getId());

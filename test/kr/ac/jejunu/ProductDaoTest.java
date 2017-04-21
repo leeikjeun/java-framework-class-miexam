@@ -1,5 +1,6 @@
 package kr.ac.jejunu;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -9,13 +10,22 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ProductDaoTest {
+
+    ProductDao productDao;
+    DaoFactory daoFactory;
+
+    @Before
+    public void setUp(){
+        daoFactory = new DaoFactory();
+        productDao = daoFactory.productDao();
+    }
+
     @Test
     public void get() throws SQLException, ClassNotFoundException {
         Long id = 1L;
         String title = "제주감귤";
         Integer price = 15000;
 
-        ProductDao productDao = new ProductDao();
         Product product = productDao.get(id);
         assertThat(id, is(product.getId()));
         assertThat(title, is(product.getTitle()));
@@ -32,8 +42,6 @@ public class ProductDaoTest {
         product.setId(id);
         product.setTitle(title);
         product.setPrice(price);
-
-        ProductDao productDao = new ProductDao();
 
         productDao.add(product);
 

@@ -36,7 +36,7 @@ public class ProductDaoTest {
 
     @Test
     public void add() throws SQLException, ClassNotFoundException {
-        Long id = Long.valueOf(new Random().nextInt(100));
+        Long id = Long.valueOf(new Random().nextInt(1000));
         String title = "testAdd";
         Integer price = 5000;
 

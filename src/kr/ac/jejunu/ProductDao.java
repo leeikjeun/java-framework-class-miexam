@@ -1,13 +1,14 @@
 package kr.ac.jejunu;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 public class ProductDao {
 
-    private ConnetionMaker connetionMaker;
+    private DataSource dataSource;
 
     public Product get(Long id) throws ClassNotFoundException, SQLException {
-        Connection connection = connetionMaker.getConnection();
+        Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("select * from product where id = ?");
         preparedStatement.setLong(1, id);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -24,7 +25,7 @@ public class ProductDao {
 
 
     public void add(Product product) throws ClassNotFoundException, SQLException {
-        Connection connection = connetionMaker.getConnection();
+        Connection connection = dataSource.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT into product(id,title,price) VALUES (?,?,?)");
         preparedStatement.setLong(1, product.getId());
         preparedStatement.setString(2,product.getTitle());
@@ -36,7 +37,7 @@ public class ProductDao {
     }
 
 
-    public void setConnetionMaker(ConnetionMaker connetionMaker) {
-        this.connetionMaker = connetionMaker;
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }

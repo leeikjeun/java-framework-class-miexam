@@ -37,7 +37,7 @@ public class ProductDaoTest {
 
     @Test
     public void add() throws SQLException, ClassNotFoundException {
-        Long id = Long.valueOf(new Random().nextInt(5000));
+        Long id = Long.valueOf(new Random().nextInt(15000));
         String title = "testAdd";
         Integer price = 5000;
 
@@ -57,7 +57,7 @@ public class ProductDaoTest {
 
     @Test
     public void update() throws SQLException, ClassNotFoundException {
-        Long id = Long.valueOf(new Random().nextInt(5000));
+        Long id = Long.valueOf(new Random().nextInt(15000));
         String title = "testupdate";
         Integer price = 5000;
 
@@ -85,7 +85,7 @@ public class ProductDaoTest {
 
     @Test
     public void delete() throws SQLException, ClassNotFoundException {
-        Long id = Long.valueOf(new Random().nextInt(5000));
+        Long id = Long.valueOf(new Random().nextInt(15000));
         String title = "testupdate";
         Integer price = 5000;
 
@@ -102,8 +102,5 @@ public class ProductDaoTest {
         assertThat(check, nullValue());
 
     }
-
-
-
 
 }

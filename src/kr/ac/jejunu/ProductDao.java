@@ -5,142 +5,30 @@ import java.sql.*;
 
 public class ProductDao {
 
-    private DataSource dataSource;
+    private Context context;
+    
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public Product get(Long id) throws ClassNotFoundException, SQLException {
-        Product product = null;
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            StatementMaker statementMaker = new GetStatementMaker(id);
-            preparedStatement = statementMaker.prepareStatement(connection);
-            resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                product = new Product();
-                product.setId(resultSet.getLong("id"));
-                product.setTitle(resultSet.getString("title"));
-                product.setPrice(resultSet.getInt("price"));
-            }
-
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-        }
-        return product;
+        StatementMaker statementMaker = new GetStatementMaker(id);
+        return context.contextGetProduct(statementMaker);
     }
-
 
     public void add(Product product) throws ClassNotFoundException, SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            StatementMaker statementMaker = new AddStatementMaker(product);
-            preparedStatement = statementMaker.prepareStatement(connection);
-            preparedStatement.executeUpdate();
-
-
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-        }
-    }
-
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
+        StatementMaker statementMaker = new AddStatementMaker(product);
+        context.contextUpdate(statementMaker);
     }
 
     public void update(Product product) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            StatementMaker statementMaker = new UpdateStatementMaker(product);
-            preparedStatement = statementMaker.prepareStatement(connection);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-        }
+        StatementMaker statementMaker = new UpdateStatementMaker(product);
+        context.contextUpdate(statementMaker);
     }
 
+
     public void delete(Long id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = dataSource.getConnection();
-            StatementMaker statementMaker = new DeleteStatementMaker(id);
-            preparedStatement = statementMaker.prepareStatement(connection);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw e;
-                }
-            }
-        }
+        StatementMaker statementMaker = new DeleteStatementMaker(id);
+        context.contextUpdate(statementMaker);
     }
 }
